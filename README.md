@@ -1,0 +1,1 @@
+This program is a simple rental system that allows users to add vehicles, rent them, and return them. The program consists of four classes: Vehicle, Car, Motorbike, and Truck, which represent different types of vehicles. The RentalSystem class manages the rental process, and the TestRentalSystem class is used to test the program.
