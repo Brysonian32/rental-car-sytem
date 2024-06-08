@@ -1,0 +1,207 @@
+
+public abstract class Vehicle {
+  
+    private String model;
+    private int year;
+    private double rentalRate;
+
+    public Vehicle( String model, int year, double rentalRate) {
+        
+        this.model = model;
+        this.year = year;
+        this.rentalRate = rentalRate;
+    }
+
+    public void displayInfo() {
+        
+        System.out.println("Model: " + model);
+        System.out.println("Year: " + year);
+        System.out.println("Rental Rate: " + rentalRate);
+    }
+
+    public double getRentalRate() {
+        return rentalRate;
+    }
+
+  
+
+    public String getModel() {
+        return model;
+    }
+}
+
+
+public class Car extends Vehicle {
+ 
+    private boolean isConvertible;
+    private String fuelType;
+
+    public Car(, String model, int year, double rentalRate,boolean isConvertible, String fuelType) {
+        super( model, year, rentalRate);
+    
+        this.isConvertible = isConvertible;
+        this.fuelType = fuelType;
+    }
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();
+  
+        System.out.println("Convertible: " + isConvertible);
+        System.out.println("Fuel Type: " + fuelType);
+    }
+}
+
+// Motorbike.java
+public class Motorbike extends Vehicle {
+    private String bikeType;
+
+    public Motorbike( String model, int year, double rentalRate,) {
+        super( model, year, rentalRate);
+       
+    }
+
+   
+}
+
+
+public class Truck extends Vehicle {
+    private int loadCapacity;
+   
+    private String cargoType;
+
+    public Truck(, String model, int year, double rentalRate, int loadCapacity, , String cargoType) {
+        super( model, year, rentalRate);
+        this.loadCapacity = loadCapacity;
+        
+        this.cargoType = cargoType;
+    }
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("Load Capacity: " + loadCapacity);
+       
+        System.out.println("Cargo Type: " + cargoType);
+    }
+}
+
+// RentalSystem.java
+import java.util.ArrayList;
+import java.util.List;
+
+public class RentalSystem {
+    private List<Vehicle> availableVehicles;
+    private List<Vehicle> rentedVehicles;
+
+    public RentalSystem() {
+        availableVehicles = new ArrayList<>();
+        rentedVehicles = new ArrayList<>();
+    }
+
+    public void addVehicle(Vehicle vehicle) {
+        availableVehicles.add(vehicle);
+    }
+
+    public void rentVehicle(Vehicle vehicle, int rentalDuration) {
+        if (availableVehicles.contains(vehicle)) {
+            availableVehicles.remove(vehicle);
+            rentedVehicles.add(vehicle);
+            System.out.println("Successfully rented.");
+            System.out.println("Total rental cost: " + calculateRentalCost(vehicle, rentalDuration));
+        } else {
+            System.out.println("Vehicle not available.");
+        }
+    }
+
+    public void returnVehicle(Vehicle vehicle) {
+        if (rentedVehicles.contains(vehicle)) {
+            rentedVehicles.remove(vehicle);
+            availableVehicles.add(vehicle);
+            System.out.println("Vehicle returned successfully.");
+        } else {
+            System.out.println("Invalid return. Vehicle not rented.");
+        }
+    }
+
+    public void displayRentalInfo() {
+        System.out.println("Available vehicles: ");
+        for (Vehicle av : availableVehicles) {
+            av.displayInfo();
+            System.out.println();
+        }
+        System.out.println("Rented vehicles: ");
+        for (Vehicle rv : rentedVehicles) {
+            rv.displayInfo();
+            System.out.println();
+        }
+    }
+
+    public double calculateRentalCost(Vehicle vehicle, int rentalDuration) {
+        double rentalRate = vehicle.getRentalRate();
+        double totalCost = rentalRate * rentalDuration;
+        return totalCost;
+    }
+}
+
+// TestRentalSystem.java
+import java.util.Scanner;
+
+public class TestRentalSystem {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        RentalSystem rentalSystem = new RentalSystem();
+
+        Vehicle car = new Car("Toyota", , 2020, 1500.0,2, false, "diesel");
+        Vehicle motorbike = new Motorbike("suzuki", , 2023, 100.0, "Sports");
+        Vehicle truck = new Truck("mazda",, 2021, 200.0, 3000, true, "Cargo");
+
+        rentalSystem.addVehicle(car);
+        rentalSystem.addVehicle(motorbike);
+        rentalSystem.addVehicle(truck);
+
+        rentalSystem.displayRentalInfo();
+
+        System.out.println("Enter the vehicle make:");
+        String make = scanner.nextLine();
+        System.out.println("Enter the vehicle model:");
+        String model = scanner.nextLine();
+
+        Vehicle selectedVehicle = null;
+        for (Vehicle v : rentalSystem.availableVehicles) {
+            if (v.getMake().equalsIgnoreCase(make) && v.getModel().equalsIgnoreCase(model)) {
+                selectedVehicle = v;
+            }
+        }
+
+        if (selectedVehicle != null) {
+            System.out.println("Enter the rental duration in days:");
+            int rentalDuration = scanner.nextInt();
+            rentalSystem.rentVehicle(selectedVehicle, rentalDuration);
+        } else {
+            System.out.println("Vehicle not found.");
+        }
+
+        rentalSystem.displayRentalInfo();
+
+        System.out.println("Enter the vehicle make:");
+        make = scanner.nextLine();
+        System.out.println("Enter the vehicle model:");
+        model = scanner.nextLine();
+
+        selectedVehicle = null;
+        for (Vehicle v : rentalSystem.rentedVehicles) {
+            if (v.getMake().equalsIgnoreCase(make) && v.getModel().equalsIgnoreCase(model)) {
+                selectedVehicle = v;
+            }
+        }
+
+        if (selectedVehicle != null) {
+            rentalSystem.returnVehicle(selectedVehicle);
+        } else {
+            System.out.println("Vehicle not rented.");
+        }
+
+        rentalSystem.displayRentalInfo();
+    }
+}
